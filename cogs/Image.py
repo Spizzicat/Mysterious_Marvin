@@ -18,7 +18,7 @@ class Image(commands.Cog):
 
     @commands.command()
     async def image(self, ctx):
-        await ctx.reply('image')
+        await ctx.reply('this command does not work yet')
 
 async def setup(bot):
     await bot.add_cog(Image(bot))
