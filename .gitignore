@@ -1,0 +1,13 @@
+# private information
+token.txt
+bank.json
+wordlists.py
+
+# large files
+ffmpeg.exe
+
+# pycache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
