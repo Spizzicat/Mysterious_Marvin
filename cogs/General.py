@@ -10,9 +10,6 @@ import time
 
 # the manga commands take in mangadex IDs which you can find in the URLs of the mangas and chapters
 
-async def is_owner(ctx):
-    return ctx.author.id == 305161653463285780
-
 async def send_chapter(ctx,chapter_id,chapter_number=None):
 
     # get chapter data

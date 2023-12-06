@@ -15,27 +15,6 @@ import sympy as sym
 from config import *
 from scipy.fft import fft, ifft, fftfreq
 
-async def is_owner(ctx):
-    return ctx.author.id == 305161653463285780
-
-# def csc(x):
-#     if plt.sin(x) != 0:
-#         return 1/plt.sin(x)
-#     else:
-#         return None
-
-# def sec(x):
-#     if plt.cos(x) != 0:
-#         return 1/plt.cos(x)
-#     else:
-#         return None
-
-# def cot(x):
-#     if plt.tan(x) != 0:
-#         return 1/plt.tan(x)
-#     else:
-#         return None
-
 LEGAL = {
             # constants
             'pi': plt.pi, 'e': plt.e,

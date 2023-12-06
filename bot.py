@@ -22,6 +22,10 @@ LOGGING = True
 DETECTING_SLURS = True
 COG_NAMES = ['General','Economy','Math','Fishing','Audio','Image']
 
+# use the @commands.is_owner() decorator 
+# ujson
+# add csc sec cot
+
 # use help_command = None to disable default help command
 bot = commands.Bot(command_prefix = "m.", intents = discord.Intents.all())
 

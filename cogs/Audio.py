@@ -73,7 +73,7 @@ def flip_midi(midi,axis):
         # get list of note offs
         note_off_msgs = [n for n in channel['notes'] if n.type == 'note_off']
         offs = [int(n.note) for n in note_off_msgs]
-
+        
         if not offs:
             continue
 
@@ -108,7 +108,7 @@ def flip_midi(midi,axis):
         for msg in channel['pitchwheel']:
             if msg.pitch == 0:
                 continue
-            msg.pitch = (msg.pitch+1)*-1
+            msg.pitch = min((msg.pitch+1)*-1,8191)
 
 def process_signals(*signals):
 
