@@ -97,7 +97,7 @@ class Math(commands.Cog):
         await ctx.reply(content='',file=discord.File(f'{DIR}/temp/implicit.png'))
         
     @commands.command()
-    async def fuck(self, ctx, member: discord.Member=None):
+    async def harvest(self, ctx, member: discord.Member=None):
 
         # initialize variables
         s = 12
@@ -138,8 +138,8 @@ class Math(commands.Cog):
                 ax.text(j,i,harvest[i][j],ha="center",va="center",color="w",size=value_text_size)
 
         # send plot
-        plt.savefig(f'{DIR}/temp/fuck.png')
-        await ctx.reply(content='',file=discord.File(f'{DIR}/temp/fuck.png'))
+        plt.savefig(f'{DIR}/temp/harvest.png')
+        await ctx.reply(content='',file=discord.File(f'{DIR}/temp/harvest.png'))
 
 async def setup(bot):
     await bot.add_cog(Math(bot))
