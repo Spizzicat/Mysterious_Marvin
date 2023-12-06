@@ -3,9 +3,6 @@ from discord.ext import commands
 from config import *
 import os
 import PIL as pil
-
-async def is_owner(ctx):
-    return ctx.author.id == 305161653463285780
     
 class Image(commands.Cog):
 

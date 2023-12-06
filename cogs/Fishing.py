@@ -2,9 +2,6 @@ import discord
 from discord.ext import commands
 from config import *
 import os
-
-async def is_owner(ctx):
-    return ctx.author.id == 305161653463285780
     
 class Fishing(commands.Cog):
 
