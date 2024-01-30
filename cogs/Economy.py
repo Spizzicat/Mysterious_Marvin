@@ -12,12 +12,14 @@ import asyncio
 # make update_companies() handle the money in nonexistent companies before deletion
 # maybe add check to the pay command that does not allow you to go into debt
 
+# maybe rewrite bank as its own class
+
 # make sure these have a capital letter
 # alternatively you could make a companies dict with an id and a name
 companies_list = ['Peepslart','Geepslart','Snorp','Beeple','Poopslart']
 
 async def update_companies():
-    '''updates all companies. (this function should run when the cog starts up)'''
+    '''Updates companies json based on the list above. This function should run when the cog starts up.'''
 
     bank = read_bank()
 
@@ -50,12 +52,13 @@ async def update_companies():
     write_bank(bank)
 
 async def handle_no_account(bank, member):
+    '''Helper function that makes an account for a member if they do not have one yet.'''
     
-    # handles no account
+    # adds account
     bank['accounts'].setdefault(str(member.id), {'name':str(member),'balance':0,"lastdaily":None,'portfolio':{}})
-    bank['accounts'][str(member.id)].setdefault('lastdaily',None)
+    bank['accounts'][str(member.id)].setdefault('lastdaily', None)
 
-    # handles no companies in portfolio
+    # adds companies with default investments to the account's portfolio
     for company_name in companies_list:
         company_key = company_name.lower()
         bank['accounts'][str(member.id)]['portfolio'].setdefault(company_key, 0)
@@ -63,10 +66,10 @@ async def handle_no_account(bank, member):
     write_bank(bank)
 
 async def get_balance(ctx, member: discord.Member = None):
-        
-    member = ctx.author if not member else member
 
     bank = read_bank()
+        
+    member = ctx.author if not member else member
 
     await handle_no_account(bank,member)
 
@@ -78,10 +81,11 @@ async def get_balance(ctx, member: discord.Member = None):
 
 async def deposit(ctx, amount=0, member=None):
 
+    bank = read_bank()
+
     member = ctx.author if not member else member
     amount = round(float(amount))
 
-    bank = read_bank()
     await handle_no_account(bank,member)
 
     bank['accounts'][str(member.id)]['balance'] += amount
@@ -92,9 +96,9 @@ async def deposit(ctx, amount=0, member=None):
 
 async def pay(ctx, member, amount):
 
-    amount = round(float(amount))
-
     bank = read_bank()
+
+    amount = round(float(amount))
 
     await handle_no_account(bank,ctx.author)
     await handle_no_account(bank,member)
@@ -102,29 +106,6 @@ async def pay(ctx, member, amount):
     bank['accounts'][str(member.id)]['balance'] += amount
     
     write_bank(bank)
-
-REEL_BUTTON_NAMES = ['Feel','Seal','Deal','Peel','Kneel','Steal','Heal']
-
-# 'Repeal','Squeal','Congeal','Reveal','Conceal','Appeal'
-
-def randomize_button_names():
-
-    new = random.sample(REEL_BUTTON_NAMES)[0:3]
-    new.insert(random.randint(0,2),'Reel')
-    return new
-
-# class Buttons(discord.ui.View):
-
-#     def __init__(self,ctx):
-#         self.reel_time = random.randint(5,10)
-#         super().__init__(timeout=None)
-#         self.ctx = ctx
-#         self.response = None
-#         self.add_item(discord.ui.Button(label="yorp",style=discord.ButtonStyle.blurple))
-
-#     @discord.ui.button(label='fuck') # i want to do something like this but obviously i cant
-#     async def peel(self, button: discord.ui.Button, interaction = discord.Interaction):
-#         await interaction.response.send_message("ra")
 
 class Economy(commands.Cog):
 
@@ -167,7 +148,7 @@ class Economy(commands.Cog):
 
         if not answer.content.isdigit() and (not answer.content.startswith('m.')):
             
-            await ctx.reply('Fuck you! All of your Marvin Coins have been removed from your account.')
+            await ctx.reply('Oh no! All of your Marvin Coins have been removed from your account.')
             if bank['accounts'][str(ctx.author.id)]['balance'] >= 0:
                 await deposit(ctx, int(-1*bank['accounts'][str(ctx.author.id)]['balance']), ctx.author)
             
@@ -329,17 +310,16 @@ class Economy(commands.Cog):
 
             # for formatting
             tot_secs_left = round(cooldown_interval.total_seconds() - delta_t.total_seconds())
-            seconds_left = (tot_secs_left % 60)
-            minutes_left = (tot_secs_left % 3600)//60
-            hours_left = (tot_secs_left % 86400)//3600
 
-            if delta_t > cooldown_interval:
-
+            if delta_t >= cooldown_interval:
                 bank['accounts'][str(ctx.author.id)]['lastdaily'] = str(msg_time)
                 write_bank(bank)
                 await deposit(ctx, daily_amount, ctx.author)
                 await ctx.reply(f'Your daily bonus of {daily_amount} Marvin Coins has been deposited into your account.')
             else:
+                seconds_left = (tot_secs_left % 60)
+                minutes_left = (tot_secs_left % 3600)//60
+                hours_left = (tot_secs_left % 86400)//3600
                 await ctx.reply(f'You have already claimed your daily bonus.\
                 \nYou can claim your next daily bonus in {hours_left} hours, {minutes_left} minutes, and {seconds_left} seconds.')
         else:
@@ -348,29 +328,12 @@ class Economy(commands.Cog):
             await deposit(ctx, daily_amount, ctx.author)
             await ctx.reply(f'Your daily bonus of {daily_amount} Marvin Coins has been deposited into your account.')
 
-    # @commands.command(aliases=['gofishing'])  
-    # async def fish(self, ctx):
-
-    #     reel_button = Buttons(ctx)
-
-    #     # different fishing status embeds
-    #     no_bite = discord.Embed(title='Fishing Status',description='No bite...')
-    #     bite = discord.Embed(title='Fishing Status',description='You got a bite!')
-    #     got_away = discord.Embed(title='Fishing Status',description='The fish got away...')
-    #     fish_caught = discord.Embed(title='Fishing Status',description='You caught a fish!')
-        
-    #     status = await ctx.reply(content='',embed=no_bite,view=None)
-
-    #     await asyncio.sleep(random.randint(1,5))
-
-    #     await status.edit(content='',embed=bite,view=reel_button) # change status
-    #     print("guglio")
-    #     await asyncio.sleep(3) # you have one second to reel in the fish
-    #     print(reel_button.response)
-    #     if reel_button.response != None:
-    #         await status.edit(content='',embed=fish_caught,view=None)
-    #     else:
-    #         await status.edit(content='',embed=got_away,view=None)
+    @commands.command()
+    @commands.is_owner()
+    async def updatebank(self, ctx):
+        bank = read_bank()
+        await update_companies()
+        await ctx.reply('Bank updated.')
 
 async def setup(bot):
     await bot.add_cog(Economy(bot))

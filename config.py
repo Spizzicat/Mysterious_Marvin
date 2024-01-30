@@ -1,6 +1,5 @@
 import os
 import json
-import matplotlib.pylab as plt
 
 DIR = os.getcwd()
 
