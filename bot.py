@@ -15,8 +15,8 @@ import random
 from dotenv import load_dotenv
 
 DIR = os.getcwd()
-file = open(f'{DIR}/token.txt')
-TOKEN = file.read()
+with open(f'{DIR}/token.txt') as f:
+    TOKEN = f.read()
 OWNER_ID = 305161653463285780
 LOGGING = True
 DETECTING_SLURS = True
@@ -140,6 +140,11 @@ async def reload(ctx, cog=''):
             await bot.unload_extension(f"cogs.{cog}")
             await bot.load_extension(f"cogs.{cog}")
         await ctx.reply(f"All cogs reloaded.")
+
+@bot.event
+async def on_command_error(ctx,error):
+    print(error)
+    await ctx.reply(error)
 
 async def load():
     cogs = COG_NAMES
