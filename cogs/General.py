@@ -46,7 +46,8 @@ async def send_chapter(ctx,chapter_id,chapter_number=None):
         
         # clear manga folder
         for file in os.listdir(f'{DIR}/temp/manga'):
-            os.remove(f'{DIR}/temp/manga/{file}') # DANGEROUS!
+            # DANGEROUS!
+            os.remove(f'{DIR}/temp/manga/{file}')  
 
 async def send_manga(ctx,manga_id):
 
@@ -148,7 +149,7 @@ class General(commands.Cog):
     @commands.is_owner()
     async def manga(self, ctx, mangadex_manga_id):
         if mangadex_manga_id:
-            await send_manga(ctx,mangadex_manga_id)
+            await send_manga(ctx, mangadex_manga_id)
 
     @commands.command(aliases=['sbr'])
     @commands.is_owner()
