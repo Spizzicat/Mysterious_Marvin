@@ -10,7 +10,7 @@ import time
 
 # the manga commands take in mangadex IDs which you can find in the URLs of the mangas and chapters
 
-async def send_chapter(ctx,chapter_id,chapter_number=None):
+async def send_chapter(ctx, chapter_id, chapter_number=None):
 
     # get chapter data
     chapter_response = requests.get(url=f"https://api.mangadex.org/at-home/server/{chapter_id}")
@@ -21,7 +21,7 @@ async def send_chapter(ctx,chapter_id,chapter_number=None):
     # create list of the filenames of the chapter images
     img_filenames = [s for s in data['chapter']['data']]
     
-    # group filenames into groups of 10
+    # partition filenames into groups of 10
     img_filename_groups = [img_filenames[i:i + 10] for i in range(0, len(img_filenames), 10)]
 
     # send chapter number if appropriate 
@@ -49,8 +49,10 @@ async def send_chapter(ctx,chapter_id,chapter_number=None):
             # DANGEROUS!
             os.remove(f'{DIR}/temp/manga/{file}')  
 
-async def send_manga(ctx,manga_id):
+async def send_manga(ctx, manga_id):
 
+    # search_term = ' '.join(args).strip()
+    
     # note: change this to remove duplicates or add scanlation groups
 
     response_list = []
@@ -64,18 +66,19 @@ async def send_manga(ctx,manga_id):
         response_list.append(manga_response.json())
 
     # create list of chapter ids
-    for r in response_list:
-        for c in r['data']:
-            if c['attributes']['translatedLanguage'] == 'en':
-                chapters_with_ids.append( (c['id'],float(c['attributes']['chapter'])) )
+    for response in response_list:
+        for c in response['data']:
+            if c['attributes']['translatedLanguage'] == 'en' and not c['attributes']['externalUrl']:
+                chapters_with_ids.append( (c['id'], float(c['attributes']['chapter'])) )
 
+    # sorts by chapter number
     chapters_with_ids.sort(key=lambda x: x[1])
     
     # loop through list of chapter ids
-    for chapter_id,chapter_number in chapters_with_ids:
+    for chapter_id, chapter_number in chapters_with_ids:
         
         # send chapter
-        await send_chapter(ctx,chapter_id,chapter_number)
+        await send_chapter(ctx, chapter_id, chapter_number)
     
 class General(commands.Cog):
 
