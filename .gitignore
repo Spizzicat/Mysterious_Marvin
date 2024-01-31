@@ -6,7 +6,7 @@ wordlists.py
 # large files
 ffmpeg.exe
 
-# temp
+# temporary files
 temp/
 
 # pycache
