@@ -132,6 +132,7 @@ class General(commands.Cog):
 
     @commands.command()
     async def history(self, ctx):
+        '''Shows message history.'''
 
         messages = []
         async for msg in ctx.message.channel.history(limit = 10):
@@ -159,12 +160,12 @@ class General(commands.Cog):
     async def steelballrun(self, ctx):
         await send_manga(ctx,'1044287a-73df-48d0-b0b2-5327f32dd651')
 
-    @commands.command(aliases=['atkneecap','kneecap','knee','atknee','kn','k','kneec','kneep'])
+    @commands.command(aliases=['atkneecap','kneecap','knee','atknee','kn','k','kneec','kneep'], hidden=True)
     async def pingkneecap(self, ctx):
         await ctx.message.delete()
         await ctx.send(f'<@{114112473430360070}>',delete_after=0)
 
-    @commands.command(aliases=['atflashlight','flashlight','ezo','e','flash','fla','fl','f'])
+    @commands.command(aliases=['atflashlight','flashlight','ezo','e','flash','fla','fl','f'], hidden=True)
     async def pingflashlight(self, ctx):
         await ctx.message.delete()
         await ctx.send(f'<@{158418656861093888}>',delete_after=0)

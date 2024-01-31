@@ -136,7 +136,7 @@ class Economy(commands.Cog):
 
         member = ctx.author if not member else member
         bal = self.get_balance(ctx, member)
-        await ctx.reply(f'{member.nick} ({member}) has {bal} Marvin Coin(s) in their account.')
+        await ctx.reply(f'<@{member.id}> has {bal} Marvin Coin(s) in their account.')
 
     @commands.command(aliases=['give'])
     async def pay(self, ctx, member: discord.Member=None, amount=None):
@@ -145,7 +145,7 @@ class Economy(commands.Cog):
             await ctx.reply(f'Please provide both a recipient and an amount.')
         
         self.transfer_coins(ctx, member, amount)
-        await ctx.reply(f'{amount} Marvin Coins have been transfered from {ctx.author}\'s account to {member}\'s account.')
+        await ctx.reply(f'{amount} Marvin Coins have been transfered from <@{ctx.author.id}>\'s account to <@{member.id}>\'s account.')
 
     @commands.command(aliases=['game'])  
     async def gamble(self, ctx): # maybe change to m.bet amount condition
