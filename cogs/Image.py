@@ -21,7 +21,7 @@ class Image(commands.Cog):
         try:
             url = ctx.message.attachments[0].url
         except IndexError:
-            return None   
+            return   
 
         with open(f'{DIR}/temp/cropped.png', 'wb') as f:
             f.write(requests.get(url).content)
@@ -29,8 +29,7 @@ class Image(commands.Cog):
         im = pil.Image.open(f'{DIR}/temp/cropped.png')
 
         if im.mode in ['RGBA', 'LA'] or im.mode == 'P' and 'transparency' in im.info:
-            alpha = im.convert('RGBA').split()[-1]
-            if bbox := alpha.getbbox():
+            if bbox := im.convert('RGBA').split()[-1].getbbox():
                 im = im.crop(bbox)
 
         im.save(f'{DIR}/temp/cropped.png', format='PNG')
