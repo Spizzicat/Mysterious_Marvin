@@ -1,0 +1,13 @@
+discord
+numpy
+sympy
+scipy
+matplotlib
+pillow
+requests
+mido
+cycler
+send2trash
+termcolor
+python-dotenv
+fluidsynth

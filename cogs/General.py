@@ -5,8 +5,6 @@ import os
 import requests
 from send2trash import send2trash
 import numpy as np
-import json
-import time
 
 # the manga commands take in mangadex IDs which you can find in the URLs of the mangas and chapters
 
