@@ -8,7 +8,7 @@ import numpy as np
 
 # the manga commands take in mangadex IDs which you can find in the URLs of the mangas and chapters
 
-async def send_chapter(ctx, chapter_id, chapter_number=None):
+async def send_chapter(ctx : commands.Context, chapter_id : str, chapter_number : int = None):
 
     # get chapter data
     chapter_response = requests.get(url=f"https://api.mangadex.org/at-home/server/{chapter_id}")
@@ -20,7 +20,7 @@ async def send_chapter(ctx, chapter_id, chapter_number=None):
     img_filenames = [s for s in data['chapter']['data']]
     
     # partition filenames into groups of 10
-    img_filename_groups = [img_filenames[i:i + 10] for i in range(0, len(img_filenames), 10)]
+    img_filename_groups = [img_filenames[i : i + 10] for i in range(0, len(img_filenames), 10)]
 
     # send chapter number if appropriate 
     # idk how to the chapter number from just the chapter id
@@ -47,7 +47,7 @@ async def send_chapter(ctx, chapter_id, chapter_number=None):
             # DANGEROUS!
             os.remove(f'{DIR}/temp/manga/{file}')  
 
-async def send_manga(ctx, manga_id):
+async def send_manga(ctx : commands.Context, manga_id : str):
 
     # search_term = ' '.join(args).strip()
     
@@ -78,7 +78,7 @@ async def send_manga(ctx, manga_id):
         # send chapter
         await send_chapter(ctx, chapter_id, chapter_number)
     
-class General(commands.Cog):
+class GeneralCog(commands.Cog):
 
     def __init__(self,bot: commands.Bot):
         self.bot = bot
@@ -117,7 +117,7 @@ class General(commands.Cog):
 
     @commands.command(hidden=True)
     @commands.is_owner()
-    async def say(self, ctx, message: str = None, channel_id: int = None):
+    async def say(self, ctx : commands.Context, message : str = None, channel_id : int = None):
 
         channel = ctx.channel if not channel_id else self.bot.get_channel(channel_id)
         
@@ -129,7 +129,7 @@ class General(commands.Cog):
         await channel.send(content=message,files=files)
 
     @commands.command()
-    async def history(self, ctx):
+    async def history(self, ctx : commands.Context):
         '''Shows message history.'''
 
         messages = []
@@ -143,19 +143,19 @@ class General(commands.Cog):
         await ctx.reply(messages_string)
 
     @commands.command()
-    async def chapter(self, ctx, mangadex_chapter_id=None):
+    async def chapter(self, ctx : commands.Context, mangadex_chapter_id=None):
         if mangadex_chapter_id:
             await send_chapter(ctx,mangadex_chapter_id)
 
     @commands.command()
     @commands.is_owner()
-    async def manga(self, ctx, mangadex_manga_id):
+    async def manga(self, ctx : commands.Context, mangadex_manga_id):
         if mangadex_manga_id:
             await send_manga(ctx, mangadex_manga_id)
 
     @commands.command(aliases=['sbr'])
     @commands.is_owner()
-    async def steelballrun(self, ctx):
+    async def steelballrun(self, ctx : commands.Context):
         await send_manga(ctx,'1044287a-73df-48d0-b0b2-5327f32dd651')
 
     @commands.command(aliases=['atkneecap','kneecap','knee','atknee','kn','k','kneec','kneep'], hidden=True)
@@ -164,9 +164,9 @@ class General(commands.Cog):
         await ctx.send(f'<@{114112473430360070}>',delete_after=0)
 
     @commands.command(aliases=['atflashlight','flashlight','ezo','e','flash','fla','fl','f'], hidden=True)
-    async def pingflashlight(self, ctx):
+    async def pingflashlight(self, ctx : commands.Context):
         await ctx.message.delete()
         await ctx.send(f'<@{158418656861093888}>',delete_after=0)
 
 async def setup(bot):
-    await bot.add_cog(General(bot))
+    await bot.add_cog(GeneralCog(bot))

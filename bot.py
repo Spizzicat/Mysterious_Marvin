@@ -27,14 +27,14 @@ COG_NAMES = ['General','Economy','Math','Fishing','Audio','Image']
 # add csc sec cot
 
 # use help_command = None to disable default help command
-bot = commands.Bot(command_prefix = "m.", intents = discord.Intents.all())
+bot = commands.Bot(command_prefix = "m.", intents = discord.Intents.all(), help_command = None)
 
 @bot.event
 async def on_ready():
     print("\nBOT READY")
 
 @bot.event
-async def on_message(ctx):
+async def on_message(ctx : commands.Context):
 
     if ctx.author.bot:
         return
@@ -106,7 +106,7 @@ async def on_message(ctx):
     await bot.process_commands(ctx)
 
 @bot.event
-async def on_raw_reaction_add(reaction):
+async def on_raw_reaction_add(reaction : discord.Reaction):
     if reaction.user_id == OWNER_ID and str(reaction.emoji) == '🔖':
         channel = bot.get_channel(reaction.channel_id)
         msg = await channel.fetch_message(reaction.message_id)
@@ -127,9 +127,14 @@ async def on_raw_reaction_add(reaction):
         await bookmarks.send(content=msg.content,files=files)
         await bookmarks.send(content=f'<{msg.jump_url}>')
 
-@bot.command(aliases=['rl'])
+@commands.hybrid_command(
+        name="reload",
+        description="reload the cogs",
+        hidden=True,
+        aliases=['rl']
+)
 @commands.is_owner()
-async def reload(ctx, cog=''):
+async def reload(ctx : commands.Context, cog : str = ''):
     cog = cog.lower().capitalize()
     if cog in COG_NAMES:
         await bot.unload_extension(f"cogs.{cog}")
@@ -141,15 +146,23 @@ async def reload(ctx, cog=''):
             await bot.load_extension(f"cogs.{cog}")
         await ctx.reply(f"All cogs reloaded.")
 
+@commands.hybrid_command(
+        name="help",
+        description="get information about commands",
+        hidden=False
+)
+async def help(ctx : commands.Context):
+    pass
+
 @bot.event
-async def on_command_error(ctx,error):
+async def on_command_error(ctx : commands.Context, error):
     print(error)
     await ctx.reply(error)
 
 async def load():
     cogs = COG_NAMES
     for cog in cogs:
-        await bot.load_extension('cogs.'+cog)
+        await bot.load_extension('cogs.' + cog)
 
 async def main():
     async with bot:

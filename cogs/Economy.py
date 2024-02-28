@@ -1,6 +1,7 @@
 import json
 import random
 from datetime import *
+from typing import Optional
 
 import discord
 from discord.ext import commands
@@ -18,7 +19,7 @@ import asyncio
 
 companies_list = ['Peepslart','Geepslart','Snorp','Beeple','Poopslart']
 
-class Economy(commands.Cog):
+class EconomyCog(commands.Cog):
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -43,7 +44,7 @@ class Economy(commands.Cog):
             json.dump(self.bank, file, indent=4)
         file.close()
 
-    def handle_no_account(self, member):
+    def handle_no_account(self, member : discord.Member):
         '''Helper function that makes an account for a member if they do not have one yet.'''
         
         # adds account
@@ -57,7 +58,7 @@ class Economy(commands.Cog):
 
         self.write_bank()
 
-    def get_balance(self, ctx, member: discord.Member = None):
+    def get_balance(self, ctx : commands.Context, member : discord.Member = None):
 
         self.read_bank()
 
@@ -69,7 +70,7 @@ class Economy(commands.Cog):
 
         return bal
     
-    def transfer_coins(self, ctx, member, amount):
+    def transfer_coins(self, ctx : commands.Context, member : discord.Member, amount : float):
 
         self.read_bank()
 
@@ -81,7 +82,7 @@ class Economy(commands.Cog):
 
         self.write_bank()
 
-    def deposit(self, ctx, amount=0, member=None):
+    def deposit(self, ctx : commands.Context, amount : float = 0.00, member = None):
 
         self.read_bank()
 
@@ -132,14 +133,14 @@ class Economy(commands.Cog):
         self.update_companies()
 
     @commands.command(aliases=['bal'])
-    async def balance(self, ctx, member: discord.Member = None):
+    async def balance(self, ctx : commands.Context, member: discord.Member = None):
 
         member = ctx.author if not member else member
         bal = self.get_balance(ctx, member)
         await ctx.reply(f'<@{member.id}> has {bal} Marvin Coin(s) in their account.')
 
     @commands.command(aliases=['give'])
-    async def pay(self, ctx, member: discord.Member=None, amount=None):
+    async def pay(self, ctx : commands.Context, member: discord.Member = None, amount = None):
 
         if not (member and amount):
             await ctx.reply(f'Please provide both a recipient and an amount.')
@@ -148,7 +149,7 @@ class Economy(commands.Cog):
         await ctx.reply(f'{amount} Marvin Coins have been transfered from <@{ctx.author.id}>\'s account to <@{member.id}>\'s account.')
 
     @commands.command(aliases=['game'])  
-    async def gamble(self, ctx): # maybe change to m.bet amount condition
+    async def gamble(self, ctx : commands.Context): # maybe change to m.bet amount condition
 
         await ctx.reply("Pick a number from 1 to 10.")
 
@@ -175,7 +176,7 @@ class Economy(commands.Cog):
             self.deposit(ctx, -1, ctx.author)
 
     @commands.command(aliases=['listcompanies','market','stockmarket'])
-    async def companies(self, ctx):
+    async def companies(self, ctx : commands.Context):
 
         self.read_bank()
 
@@ -188,7 +189,7 @@ class Economy(commands.Cog):
         await ctx.reply(message)
 
     @commands.command(aliases=['investments'])
-    async def portfolio(self, ctx, member: discord.Member=None):
+    async def portfolio(self, ctx : commands.Context, member: discord.Member = None):
         
         member = ctx.author if not member else member
 
@@ -212,7 +213,7 @@ class Economy(commands.Cog):
         await ctx.reply(message)
 
     @commands.command(aliases=['buy','buystock'])  
-    async def invest(self, ctx, company = None, shares = None):
+    async def invest(self, ctx : commands.Context, company : str = None, shares : Optional[float] = None):
         
         member = ctx.author
 
@@ -255,7 +256,7 @@ class Economy(commands.Cog):
         await ctx.reply(f'You purchased {amount} {company_name} share(s) for a total of {total} Marvin Coins.')
 
     @commands.command(aliases=['sellstock'])  
-    async def sell(self, ctx, company = None, shares = None):
+    async def sell(self, ctx : commands.Context, company : Optional[str] = None, shares : Optional[str] = None):
         
         # handles lack of arguments
         if not (shares and company):
@@ -298,7 +299,7 @@ class Economy(commands.Cog):
         await ctx.reply(f'You sold {amount} {company_name} share(s) for a total of {total} Marvin Coins.')
 
     @commands.command(aliases=['claimdaily'])  
-    async def daily(self, ctx):
+    async def daily(self, ctx : commands.Context):
 
         self.read_bank()
 
@@ -339,7 +340,7 @@ class Economy(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def updatebank(self, ctx):
+    async def updatebank(self, ctx : commands.Context):
 
         self.update_companies()
         
@@ -353,4 +354,4 @@ class Economy(commands.Cog):
         await ctx.reply('Bank updated.')
 
 async def setup(bot):
-    await bot.add_cog(Economy(bot))
+    await bot.add_cog(EconomyCog(bot))

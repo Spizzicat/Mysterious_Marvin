@@ -3,7 +3,7 @@ from discord.ext import commands
 from config import *
 import os
     
-class Fishing(commands.Cog):
+class FishingCog(commands.Cog):
 
     def __init__(self,bot: commands.Bot):
         self.bot = bot
@@ -13,4 +13,4 @@ class Fishing(commands.Cog):
         print("\nFISHING COG READY")
 
 async def setup(bot):
-    await bot.add_cog(Fishing(bot))
+    await bot.add_cog(FishingCog(bot))

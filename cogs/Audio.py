@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 import requests
 import time
 import mido
@@ -24,16 +25,16 @@ def note_from_name(name):
     map = dict(zip([name.upper() for name in NOTE_NAMES],range(12)))
     return int(map[str(name).upper()])
 
-def get_octave(note):
+def get_octave(note : int):
 
     return int(note) // 12
 
-def flip_note(note,axis):
+def flip_note(note : int, axis : str):
 
-    flipped = (2*axis - int(note))
+    flipped = (2 * axis - int(note))
     return int(flipped)
 
-def get_most_common_note(midi):
+def get_most_common_note(midi : mido.MidiFile):
 
     notes = []
     for track in midi.tracks:
@@ -51,7 +52,7 @@ def get_most_common_note(midi):
 
     return mode
 
-def flip_midi(midi,axis):
+def flip_midi(midi : mido.MidiFile, axis : str):
 
     # organize messages by channel
     channels = [{'notes':[],'pitchwheel':[]} for x in range(0,16)]
@@ -110,7 +111,7 @@ def flip_midi(midi,axis):
                 continue
             msg.pitch = min((msg.pitch+1)*-1,8191)
 
-def process_signals(*signals):
+def process_signals(*signals : tuple):
 
     return_signals = []
     k_size = 1000
@@ -130,7 +131,7 @@ def process_signals(*signals):
         
     return return_signals
 
-class Audio(commands.Cog):
+class AudioCog(commands.Cog):
 
     def __init__(self,bot: commands.Bot):
         self.bot = bot
@@ -140,7 +141,7 @@ class Audio(commands.Cog):
         print("\nAUDIO COG READY")
 
     @commands.command()
-    async def smurgle(self,ctx):
+    async def smurgle(self, ctx : commands.Context):
 
         in_filename = 'smurgle.wav'
         out_filename = 'out.wav'
@@ -252,7 +253,7 @@ class Audio(commands.Cog):
     #     await ctx.reply(content='',file=discord.File(DIR+'/out.wav'))
 
     @commands.command(aliases=['negharm','negative','neg','flip','midiflip','invert','inverse','inv'])
-    async def negativeharmony(self,ctx,axis=None):
+    async def negativeharmony(self, ctx : commands.Context, axis : Optional[str] =None):
 
         # make it error if it cannot read the midi (?)
 
@@ -294,4 +295,4 @@ class Audio(commands.Cog):
         await ctx.reply(content='',files=[discord.File(f'{DIR}/temp/{filename}.{ext}') for ext in ['mid','mp3']])
 
 async def setup(bot):
-    await bot.add_cog(Audio(bot))
+    await bot.add_cog(AudioCog(bot))

@@ -39,7 +39,7 @@ LEGAL = {
             # 'round': round
         }
 
-class Math(commands.Cog):
+class MathCog(commands.Cog):
 
     def __init__(self,bot: commands.Bot):
         self.bot = bot
@@ -48,8 +48,13 @@ class Math(commands.Cog):
     async def on_ready(self):
         print("\nMATH COG READY")
 
-    @commands.command(aliases=['graph'],description=str(LEGAL))
-    async def plot(self,ctx,x_min:float=-10,x_max:float=10,y_min:float=-10,y_max:float=10,*garbage):
+    @commands.hybrid_command(
+        name="plot",
+        description="simple graphing calculator",
+        hidden=False,
+        aliases=['graph']
+    )
+    async def plot(self, ctx : commands.Context, x_min : float = -10, x_max : float = 10, y_min : float = -10, y_max : float = 10, *garbage : list):
 
         # initialize variables and functions
         x, y = np.meshgrid(np.linspace(x_min,x_max,400), np.linspace(y_min,y_max,400))
@@ -97,7 +102,7 @@ class Math(commands.Cog):
         await ctx.reply(content='',file=discord.File(f'{DIR}/temp/implicit.png'))
         
     @commands.command()
-    async def harvest(self, ctx, member: discord.Member=None):
+    async def harvest(self, ctx : commands.Context, member : discord.Member = None):
 
         # initialize variables
         s = 12
@@ -142,4 +147,4 @@ class Math(commands.Cog):
         await ctx.reply(content='',file=discord.File(f'{DIR}/temp/harvest.png'))
 
 async def setup(bot):
-    await bot.add_cog(Math(bot))
+    await bot.add_cog(MathCog(bot))
