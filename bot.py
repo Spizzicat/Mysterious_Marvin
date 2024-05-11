@@ -20,7 +20,7 @@ with open(f'{DIR}/token.txt') as f:
 OWNER_ID = 305161653463285780
 LOGGING = True
 DETECTING_SLURS = True
-COG_NAMES = ['General','Economy','Math','Fishing','Audio','Image']
+COG_NAMES = ['GeneralCog','EconomyCog','MathCog','FishingCog','AudioCog','ImageCog']
 
 # use the @commands.is_owner() decorator 
 # ujson
@@ -32,6 +32,8 @@ bot = commands.Bot(command_prefix = "m.", intents = discord.Intents.all(), help_
 @bot.event
 async def on_ready():
     print("\nBOT READY")
+    command_sync = await bot.tree.sync()
+    print(f"\nSYNCED {len(command_sync)} SLASH COMMANDS")
 
 @bot.event
 async def on_message(ctx : commands.Context):

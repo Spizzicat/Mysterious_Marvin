@@ -16,7 +16,11 @@ class ImageCog(commands.Cog):
     async def on_ready(self):
         print("\nIMAGE COG READY")
 
-    @commands.command(aliases=['autocrop','croptransparent'])
+    @commands.hybrid_command(
+        name="crop",
+        description="crop transparent border off of an image",
+        aliases=['autocrop','croptransparent']
+    )
     async def crop(self, ctx : commands.Context):
 
         try:
@@ -36,7 +40,10 @@ class ImageCog(commands.Cog):
         im.save(f'{DIR}/temp/cropped.png', format='PNG')
         await ctx.send(file=discord.File(f'{DIR}/temp/cropped.png'))
 
-    @commands.command()
+    @commands.hybrid_command(
+        name="vstack",
+        description="vertically stack images",
+    )
     async def vstack(self, ctx : commands.Context, backwards : bool = False):
 
         # does not handle non-image attachments
@@ -79,7 +86,10 @@ class ImageCog(commands.Cog):
         result.save(f'{DIR}/temp/vstack.png', format='PNG')
         await ctx.send(file=discord.File(f'{DIR}/temp/vstack.png'))
 
-    @commands.command()
+    @commands.hybrid_command(
+        name="hstack",
+        description="horizontally stack images",
+    )
     async def hstack(self, ctx : commands.Context, backwards : bool = False):
 
         # does not handle non-image attachments

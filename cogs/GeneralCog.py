@@ -87,35 +87,61 @@ class GeneralCog(commands.Cog):
     async def on_ready(self):
         print("\nGENERAL COG READY")
 
-    @commands.command(aliases=['latency'])
+    @commands.hybrid_command(
+        name="ping",
+        description="ping the bot",
+        aliases=['latency']
+    )
     async def ping(self, ctx):
         await ctx.reply(str(str(round(self.bot.latency*1000,1))+" ms"))
 
-    @commands.command()
+    @commands.hybrid_command(
+        name="oingo",
+        description="boingo",
+    )
     async def oingo(self, ctx):
         await ctx.reply("boingo")
 
-    @commands.command()
+    @commands.hybrid_command(
+        name="boingo",
+        description="oingo",
+    )
     async def boingo(self, ctx):
         await ctx.reply("oingo")
 
-    @commands.command()  
+    @commands.hybrid_command(
+        name="zamn",
+        description="ZAMN!",
+    ) 
     async def zamn(self, ctx):
         await ctx.send("ZAMN!")
 
-    @commands.command()  
+    @commands.hybrid_command(
+        name="marvin",
+        description="send an image of marvin",
+    ) 
     async def marvin(self, ctx):
         await ctx.send(file=discord.File(f'{DIR}/data/images/marvin.png'))
 
-    @commands.command(hidden=True)  
+    @commands.hybrid_command(
+        name="ball",
+        description="send an image of a ball",
+    ) 
     async def ball(self, ctx):
         await ctx.send(file=discord.File(f'{DIR}/data/images/ball.png'))
 
-    @commands.command(hidden=True)  
+    @commands.hybrid_command(
+        name="balls",
+        description="send an image of balls",
+    ) 
     async def balls(self, ctx):
         await ctx.send(files=[discord.File(f'{DIR}/data/images/ball.png') for i in range(2)])
 
-    @commands.command(hidden=True)
+    @commands.hybrid_command(
+        name="say",
+        description="say a message",
+        hidden=True
+    ) 
     @commands.is_owner()
     async def say(self, ctx : commands.Context, message : str = None, channel_id : int = None):
 
@@ -128,7 +154,10 @@ class GeneralCog(commands.Cog):
 
         await channel.send(content=message,files=files)
 
-    @commands.command()
+    @commands.hybrid_command(
+        name="history",
+        description="show message history",
+    ) 
     async def history(self, ctx : commands.Context):
         '''Shows message history.'''
 
@@ -142,31 +171,50 @@ class GeneralCog(commands.Cog):
 
         await ctx.reply(messages_string)
 
-    @commands.command()
+    @commands.hybrid_command(
+        name="chapter",
+        description="send a manga chapter",
+    ) 
     async def chapter(self, ctx : commands.Context, mangadex_chapter_id=None):
         if mangadex_chapter_id:
             await send_chapter(ctx,mangadex_chapter_id)
 
-    @commands.command()
+    @commands.hybrid_command(
+        name="manga",
+        description="send a manga",
+    ) 
     @commands.is_owner()
     async def manga(self, ctx : commands.Context, mangadex_manga_id):
         if mangadex_manga_id:
             await send_manga(ctx, mangadex_manga_id)
 
-    @commands.command(aliases=['sbr'])
+    @commands.hybrid_command(
+        name="sbr",
+        description="send steel ball run",
+    ) 
     @commands.is_owner()
     async def steelballrun(self, ctx : commands.Context):
         await send_manga(ctx,'1044287a-73df-48d0-b0b2-5327f32dd651')
 
-    @commands.command(aliases=['atkneecap','kneecap','knee','atknee','kn','k','kneec','kneep'], hidden=True)
+    @commands.hybrid_command(
+        name="pingkneecap",
+        description="ghost ping kneecap",
+        hidden=True,
+        aliases=['atkneecap']
+    )
     async def pingkneecap(self, ctx):
         await ctx.message.delete()
-        await ctx.send(f'<@{114112473430360070}>',delete_after=0)
+        await ctx.send(f'<@{114112473430360070}>', delete_after=0)
 
-    @commands.command(aliases=['atflashlight','flashlight','ezo','e','flash','fla','fl','f'], hidden=True)
+    @commands.hybrid_command(
+        name="pingflashlight",
+        description="ghost ping flashlight",
+        hidden=True,
+        aliases=['atflashlight','atezo','atezogaming']
+    )
     async def pingflashlight(self, ctx : commands.Context):
         await ctx.message.delete()
-        await ctx.send(f'<@{158418656861093888}>',delete_after=0)
+        await ctx.send(f'<@{158418656861093888}>', delete_after=0)
 
 async def setup(bot):
     await bot.add_cog(GeneralCog(bot))

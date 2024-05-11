@@ -1,6 +1,7 @@
 import math
 import random
 import string
+from typing import List, Optional
 
 import discord
 import matplotlib as mpl
@@ -51,13 +52,12 @@ class MathCog(commands.Cog):
     @commands.hybrid_command(
         name="plot",
         description="simple graphing calculator",
-        hidden=False,
         aliases=['graph']
     )
-    async def plot(self, ctx : commands.Context, x_min : float = -10, x_max : float = 10, y_min : float = -10, y_max : float = 10, *garbage : list):
+    async def plot(self, ctx : commands.Context, x_min : float = -10.0, x_max : float = 10.0, y_min : float = -10.0, y_max : float = 10.0):
 
         # initialize variables and functions
-        x, y = np.meshgrid(np.linspace(x_min,x_max,400), np.linspace(y_min,y_max,400))
+        x, y = np.meshgrid(np.linspace(x_min, x_max, 400), np.linspace(y_min, y_max, 400))
         legal_local = LEGAL
         legal_local['x'] = x
         legal_local['y'] = y
@@ -101,8 +101,11 @@ class MathCog(commands.Cog):
         plt.savefig(f'{DIR}/temp/implicit.png')
         await ctx.reply(content='',file=discord.File(f'{DIR}/temp/implicit.png'))
         
-    @commands.command()
-    async def harvest(self, ctx : commands.Context, member : discord.Member = None):
+    @commands.hybrid_command(
+        name="harvest",
+        description="fun data display",
+    )
+    async def harvest(self, ctx : commands.Context, member : Optional[discord.Member] = None):
 
         # initialize variables
         s = 12
