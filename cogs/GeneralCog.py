@@ -137,7 +137,7 @@ class GeneralCog(commands.Cog):
     async def balls(self, ctx):
         await ctx.send(files=[discord.File(f'{DIR}/data/images/ball.png') for i in range(2)])
 
-    @commands.hybrid_command(
+    @commands.command(
         name="say",
         description="say a message",
         hidden=True
@@ -182,6 +182,7 @@ class GeneralCog(commands.Cog):
     @commands.hybrid_command(
         name="manga",
         description="send a manga",
+        hidden=True
     ) 
     @commands.is_owner()
     async def manga(self, ctx : commands.Context, mangadex_manga_id):
@@ -191,12 +192,13 @@ class GeneralCog(commands.Cog):
     @commands.hybrid_command(
         name="sbr",
         description="send steel ball run",
+        hidden=True
     ) 
     @commands.is_owner()
     async def steelballrun(self, ctx : commands.Context):
         await send_manga(ctx,'1044287a-73df-48d0-b0b2-5327f32dd651')
 
-    @commands.hybrid_command(
+    @commands.command(
         name="pingkneecap",
         description="ghost ping kneecap",
         hidden=True,
@@ -206,7 +208,7 @@ class GeneralCog(commands.Cog):
         await ctx.message.delete()
         await ctx.send(f'<@{114112473430360070}>', delete_after=0)
 
-    @commands.hybrid_command(
+    @commands.command(
         name="pingflashlight",
         description="ghost ping flashlight",
         hidden=True,

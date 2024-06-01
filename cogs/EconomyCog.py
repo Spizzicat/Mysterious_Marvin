@@ -21,7 +21,7 @@ companies_list = ['Peepslart','Geepslart','Snorp','Beeple','Poopslart']
 
 class EconomyCog(commands.Cog):
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot):
         self.bot = bot
         with open(f'{DIR}/data/bank.json','r') as file:
             self.bank = json.loads(file.read())
@@ -44,7 +44,7 @@ class EconomyCog(commands.Cog):
             json.dump(self.bank, file, indent=4)
         file.close()
 
-    def handle_no_account(self, member : discord.Member):
+    def handle_no_account(self, member):
         '''Helper function that makes an account for a member if they do not have one yet.'''
         
         # adds account
@@ -58,7 +58,7 @@ class EconomyCog(commands.Cog):
 
         self.write_bank()
 
-    def get_balance(self, ctx : commands.Context, member : discord.Member = None):
+    def get_balance(self, ctx, member):
 
         self.read_bank()
 
@@ -70,7 +70,7 @@ class EconomyCog(commands.Cog):
 
         return bal
     
-    def transfer_coins(self, ctx : commands.Context, member : discord.Member, amount : float):
+    def transfer_coins(self, ctx, member, amount):
 
         self.read_bank()
 
@@ -82,7 +82,7 @@ class EconomyCog(commands.Cog):
 
         self.write_bank()
 
-    def deposit(self, ctx : commands.Context, amount : float = 0.00, member = None):
+    def deposit(self, ctx , amount=0.00, member=None):
 
         self.read_bank()
 
@@ -132,14 +132,22 @@ class EconomyCog(commands.Cog):
         print("\nECONOMY COG READY")
         self.update_companies()
 
-    @commands.command(aliases=['bal'])
+    @commands.hybrid_command(        
+        name="balance",
+        description="see how many marvin coins a user has",
+        aliases=['bal']
+    )
     async def balance(self, ctx : commands.Context, member: discord.Member = None):
 
         member = ctx.author if not member else member
         bal = self.get_balance(ctx, member)
         await ctx.reply(f'<@{member.id}> has {bal} Marvin Coin(s) in their account.')
 
-    @commands.command(aliases=['give'])
+    @commands.hybrid_command(        
+        name="pay",
+        description="give marvin coins to a user",
+        aliases=['give']
+    )
     async def pay(self, ctx : commands.Context, member: discord.Member = None, amount = None):
 
         if not (member and amount):
@@ -148,7 +156,11 @@ class EconomyCog(commands.Cog):
         self.transfer_coins(ctx, member, amount)
         await ctx.reply(f'{amount} Marvin Coins have been transfered from <@{ctx.author.id}>\'s account to <@{member.id}>\'s account.')
 
-    @commands.command(aliases=['game'])  
+    @commands.hybrid_command(        
+        name="gamble",
+        description="gamble with your marvin coins in a simple game",
+        aliases=['game']
+    )
     async def gamble(self, ctx : commands.Context): # maybe change to m.bet amount condition
 
         await ctx.reply("Pick a number from 1 to 10.")
@@ -175,7 +187,11 @@ class EconomyCog(commands.Cog):
             await ctx.reply('Incorrect! One Marvin Coin has been removed from your account.')
             self.deposit(ctx, -1, ctx.author)
 
-    @commands.command(aliases=['listcompanies','market','stockmarket'])
+    @commands.hybrid_command(        
+        name="companies",
+        description="list the companies on the stock market",
+        aliases=['showcompanies']
+    )
     async def companies(self, ctx : commands.Context):
 
         self.read_bank()
@@ -188,7 +204,11 @@ class EconomyCog(commands.Cog):
 
         await ctx.reply(message)
 
-    @commands.command(aliases=['investments'])
+    @commands.hybrid_command(        
+        name="portfolio",
+        description="show a member's investment portfolio",
+        aliases=['investments']
+    )
     async def portfolio(self, ctx : commands.Context, member: discord.Member = None):
         
         member = ctx.author if not member else member
@@ -212,7 +232,11 @@ class EconomyCog(commands.Cog):
 
         await ctx.reply(message)
 
-    @commands.command(aliases=['buy','buystock'])  
+    @commands.hybrid_command(        
+        name="invest",
+        description="by shares in a stock using marvin coins",
+        aliases=['buy', 'buystock']
+    )
     async def invest(self, ctx : commands.Context, company : str = None, shares : Optional[float] = None):
         
         member = ctx.author
@@ -255,8 +279,12 @@ class EconomyCog(commands.Cog):
 
         await ctx.reply(f'You purchased {amount} {company_name} share(s) for a total of {total} Marvin Coins.')
 
-    @commands.command(aliases=['sellstock'])  
-    async def sell(self, ctx : commands.Context, company : Optional[str] = None, shares : Optional[str] = None):
+    @commands.hybrid_command(        
+        name="divest",
+        description="sell shares in a stock in exchange for marvin coins",
+        aliases=['sell', 'sellstock']
+    )  
+    async def divest(self, ctx : commands.Context, company : Optional[str] = None, shares : Optional[str] = None):
         
         # handles lack of arguments
         if not (shares and company):
@@ -298,7 +326,11 @@ class EconomyCog(commands.Cog):
 
         await ctx.reply(f'You sold {amount} {company_name} share(s) for a total of {total} Marvin Coins.')
 
-    @commands.command(aliases=['claimdaily'])  
+    @commands.hybrid_command(        
+        name="daily",
+        description="get your daily free marvin coins",
+        aliases=['dailycoins']
+    )  
     async def daily(self, ctx : commands.Context):
 
         self.read_bank()

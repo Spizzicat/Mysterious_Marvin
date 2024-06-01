@@ -130,10 +130,10 @@ async def on_raw_reaction_add(reaction : discord.Reaction):
         await bookmarks.send(content=f'<{msg.jump_url}>')
 
 @commands.hybrid_command(
-        name="reload",
-        description="reload the cogs",
-        hidden=True,
-        aliases=['rl']
+    name="reload",
+    description="reload the cogs",
+    hidden=True,
+    aliases=['rl']
 )
 @commands.is_owner()
 async def reload(ctx : commands.Context, cog : str = ''):
@@ -149,9 +149,9 @@ async def reload(ctx : commands.Context, cog : str = ''):
         await ctx.reply(f"All cogs reloaded.")
 
 @commands.hybrid_command(
-        name="help",
-        description="get information about commands",
-        hidden=False
+    name="help",
+    description="get information about commands",
+    hidden=False
 )
 async def help(ctx : commands.Context):
     pass
@@ -162,8 +162,7 @@ async def on_command_error(ctx : commands.Context, error):
     await ctx.reply(error)
 
 async def load():
-    cogs = COG_NAMES
-    for cog in cogs:
+    for cog in COG_NAMES:
         await bot.load_extension('cogs.' + cog)
 
 async def main():

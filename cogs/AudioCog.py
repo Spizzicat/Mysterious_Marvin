@@ -25,11 +25,11 @@ def note_from_name(name):
     map = dict(zip([name.upper() for name in NOTE_NAMES],range(12)))
     return int(map[str(name).upper()])
 
-def get_octave(note : int):
+def get_octave(note):
 
     return int(note) // 12
 
-def flip_note(note : int, axis : str):
+def flip_note(note, axis):
 
     flipped = (2 * axis - int(note))
     return int(flipped)
@@ -52,7 +52,7 @@ def get_most_common_note(midi : mido.MidiFile):
 
     return mode
 
-def flip_midi(midi : mido.MidiFile, axis : str):
+def flip_midi(midi : mido.MidiFile, axis):
 
     # organize messages by channel
     channels = [{'notes':[],'pitchwheel':[]} for x in range(0,16)]
@@ -65,7 +65,7 @@ def flip_midi(midi : mido.MidiFile, axis : str):
             if msg.type in ['pitchwheel']:
                 channels[msg.channel-1]['pitchwheel'].append(msg)
 
-    for c,channel in enumerate(channels):
+    for c, channel in enumerate(channels):
 
         # skip empty channels and drum channel
         if not channel or c == 8 or (not channel['notes'] and not channel['pitchwheel']):
@@ -121,12 +121,7 @@ def process_signals(*signals : tuple):
     # [(np.exp(-((x-k_size/2)/(k_size/5))**2))/k_size for x in range(k_size)]
 
     for signal in list(signals):
-        
         return_signal = np.int32(np.convolve(signal,kernel,mode='same'))
-        # return_signal = signal[::2]
-
-        # signal[:] = signal[::-1]
-
         return_signals.append(return_signal)
         
     return return_signals
