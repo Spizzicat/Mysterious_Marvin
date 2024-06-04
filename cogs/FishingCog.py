@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
-from config import *
-import os
+from bot import DIR
     
 class FishingCog(commands.Cog):
 

@@ -13,8 +13,10 @@ from discord.ext import commands
 from scipy.special import gamma
 import sympy as sym
 
-from config import *
+from helpers import *
 from scipy.fft import fft, ifft, fftfreq
+
+from bot import DIR
 
 LEGAL = {
             # constants

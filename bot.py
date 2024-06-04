@@ -2,25 +2,23 @@ import asyncio
 import os
 import random
 import sys
-
 import discord
 from discord.ext import commands
 from termcolor import colored
-
-from config import *
-from wordlists import *
 import numpy as np
 import requests
 import random
 from dotenv import load_dotenv
 
-DIR = os.getcwd()
+from constants import *
+from helpers import *
+
 with open(f'{DIR}/token.txt') as f:
     TOKEN = f.read()
-OWNER_ID = 305161653463285780
+
 LOGGING = True
 DETECTING_SLURS = True
-COG_NAMES = ['GeneralCog','EconomyCog','MathCog','FishingCog','AudioCog','ImageCog']
+COG_NAMES = ['GeneralCog', 'EconomyCog', 'MathCog', 'FishingCog', 'AudioCog', 'ImageCog', 'HistoryCog']
 
 # use the @commands.is_owner() decorator 
 # ujson
@@ -108,6 +106,11 @@ async def on_message(ctx : commands.Context):
     await bot.process_commands(ctx)
 
 @bot.event
+async def on_command_error(ctx : commands.Context, error):
+    print(error)
+    await ctx.reply(error)
+
+@bot.event
 async def on_raw_reaction_add(reaction : discord.Reaction):
     if reaction.user_id == OWNER_ID and str(reaction.emoji) == '🔖':
         channel = bot.get_channel(reaction.channel_id)
@@ -129,12 +132,7 @@ async def on_raw_reaction_add(reaction : discord.Reaction):
         await bookmarks.send(content=msg.content,files=files)
         await bookmarks.send(content=f'<{msg.jump_url}>')
 
-@commands.hybrid_command(
-    name="reload",
-    description="reload the cogs",
-    hidden=True,
-    aliases=['rl']
-)
+@bot.command(aliases=['rl'])
 @commands.is_owner()
 async def reload(ctx : commands.Context, cog : str = ''):
     cog = cog.lower().capitalize()
@@ -148,18 +146,13 @@ async def reload(ctx : commands.Context, cog : str = ''):
             await bot.load_extension(f"cogs.{cog}")
         await ctx.reply(f"All cogs reloaded.")
 
-@commands.hybrid_command(
+@bot.hybrid_command(
     name="help",
     description="get information about commands",
     hidden=False
 )
 async def help(ctx : commands.Context):
-    pass
-
-@bot.event
-async def on_command_error(ctx : commands.Context, error):
-    print(error)
-    await ctx.reply(error)
+    print('someone used the help command')
 
 async def load():
     for cog in COG_NAMES:

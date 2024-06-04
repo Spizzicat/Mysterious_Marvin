@@ -1,7 +1,7 @@
-# private information
+# private
 token.txt
 bank.json
-wordlists.py
+constants.py
 
 # large files
 ffmpeg.exe

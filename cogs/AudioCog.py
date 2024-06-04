@@ -1,7 +1,6 @@
 import os
 from typing import Optional
 import requests
-import time
 import mido
 
 import discord
@@ -13,9 +12,8 @@ from discord.ext import commands
 from scipy.io import wavfile
 from scipy.fft import fft, ifft, fftfreq
 from scipy import stats
-
-from config import *
-import fluidsynth
+from helpers import get_relevant_attachment_url
+from bot import DIR
 
 NOTE_NAMES = ['C','Db','D','Eb','E','F','Gb','G','A','Bb','B']
 
@@ -44,7 +42,7 @@ def get_most_common_note(midi : mido.MidiFile):
                     continue
                 notes.append(int(msg.note))
 
-    m = stats.mode(tuple(notes),keepdims=False).mode # may break in scipy update
+    m = stats.mode(tuple(notes), keepdims=False).mode # may break in scipy update
     if m:
         mode = m
     else:
@@ -97,7 +95,7 @@ def flip_midi(midi : mido.MidiFile, axis):
         flipped_notes = [flip_note(msg.note,axis)+adj for msg in channel['notes']]
 
         # flip notes
-        for i,msg in enumerate(channel['notes']):
+        for i, msg in enumerate(channel['notes']):
             if flipped_notes[i] >= 0 and flipped_notes[i] <= 127:
                 msg.note = flipped_notes[i]
             else:
@@ -141,10 +139,7 @@ class AudioCog(commands.Cog):
         in_filename = 'smurgle.wav'
         out_filename = 'out.wav'
 
-        try:
-            url = ctx.message.attachments[0].url
-        except:
-            return None
+        url = await get_relevant_attachment_url(ctx, 'audio')
         
         with open(f'{DIR}/temp/{in_filename}', 'wb') as f:
             f.write(requests.get(url).content)
@@ -158,9 +153,9 @@ class AudioCog(commands.Cog):
         left_in = data_in[:,0]
         right_in = data_in[:,1]
 
-        left_out,right_out = process_signals(left_in,right_in)
+        left_out, right_out = process_signals(left_in,right_in)
 
-        data_out = np.array([left_out,right_out]).transpose()
+        data_out = np.array([left_out, right_out]).transpose()
 
         # normalize data
         ratio = np.max(np.absolute(data_in)) / np.max(np.absolute(data_out)) 
@@ -252,16 +247,13 @@ class AudioCog(commands.Cog):
 
         # make it error if it cannot read the midi (?)
 
-        # get attached midi
-        try:
-            url = ctx.message.attachments[0].url
-        except:
-            midi = None
-        else:
-            with open(f'{DIR}/temp/neg_in.mid', 'wb') as f:
-                f.write(requests.get(url).content)
-                f.close
-            midi = mido.MidiFile(f'{DIR}/temp/neg_in.mid')
+        # get midi
+        url = await get_relevant_attachment_url(ctx, 'audio', 'midi')
+
+        with open(f'{DIR}/temp/neg_in.mid', 'wb') as f:
+            f.write(requests.get(url).content)
+            f.close
+        midi = mido.MidiFile(f'{DIR}/temp/neg_in.mid')
 
         # get axis note
         if axis:

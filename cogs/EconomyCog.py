@@ -1,13 +1,12 @@
+import discord
+from discord.ext import commands
 import json
 import random
 from datetime import *
 from typing import Optional
-
-import discord
-from discord.ext import commands
-
-from config import * 
+import os
 import asyncio
+from bot import DIR
 
 # things to do:
 # make update_companies() handle the money in nonexistent companies before deletion
@@ -313,7 +312,7 @@ class EconomyCog(commands.Cog):
 
         # checks if you have enough coins in your portfolio to sell the specified amount
         amout_in_portfolio = self.bank['accounts'][str(ctx.author.id)]['portfolio'][company_key]
-        if amout_in_portfolio - amount < 0:
+        if amout_in_portfolio < amount:
             await ctx.reply(f"You cannot sell {amount} {company_name} share(s) because you only own {amout_in_portfolio} {company_name} share(s).")
             return
 

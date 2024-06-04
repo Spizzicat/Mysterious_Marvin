@@ -1,11 +1,12 @@
 import discord
 from discord.ext import commands
-from config import *
 import os
 import PIL as pil
 from PIL import Image
 import numpy as np
 import requests
+from helpers import get_relevant_attachment_url
+from bot import DIR
     
 class ImageCog(commands.Cog):
 
@@ -19,14 +20,11 @@ class ImageCog(commands.Cog):
     @commands.hybrid_command(
         name="crop",
         description="crop transparent border off of an image",
-        aliases=['autocrop','croptransparent']
+        aliases=['autocrop', 'croptransparent']
     )
     async def crop(self, ctx : commands.Context):
 
-        try:
-            url = ctx.message.attachments[0].url
-        except IndexError:
-            return   
+        url = await get_relevant_attachment_url(ctx, 'image')
 
         with open(f'{DIR}/temp/cropped.png', 'wb') as f:
             f.write(requests.get(url).content)

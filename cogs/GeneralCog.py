@@ -1,10 +1,11 @@
 import discord
 from discord.ext import commands
-from config import *
 import os
 import requests
 from send2trash import send2trash
 import numpy as np
+from helpers import get_relevant_attachment_url
+from bot import DIR
 
 # the manga commands take in mangadex IDs which you can find in the URLs of the mangas and chapters
 
@@ -153,23 +154,6 @@ class GeneralCog(commands.Cog):
             files.append(file)
 
         await channel.send(content=message,files=files)
-
-    @commands.hybrid_command(
-        name="history",
-        description="show message history",
-    ) 
-    async def history(self, ctx : commands.Context):
-        '''Shows message history.'''
-
-        messages = []
-        async for msg in ctx.message.channel.history(limit = 10):
-            messages.append(msg.content)
-        
-        messages_string = ''
-        for m in messages[::-1]:
-            messages_string += m+'\n'
-
-        await ctx.reply(messages_string)
 
     @commands.hybrid_command(
         name="chapter",
