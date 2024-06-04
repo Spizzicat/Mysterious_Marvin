@@ -5,7 +5,7 @@ import requests
 from send2trash import send2trash
 import numpy as np
 from helpers import get_relevant_attachment_url
-from bot import DIR
+from constants import DIR
 
 # the manga commands take in mangadex IDs which you can find in the URLs of the mangas and chapters
 

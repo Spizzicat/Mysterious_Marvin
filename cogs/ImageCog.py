@@ -6,7 +6,7 @@ from PIL import Image
 import numpy as np
 import requests
 from helpers import get_relevant_attachment_url
-from bot import DIR
+from constants import DIR
     
 class ImageCog(commands.Cog):
 

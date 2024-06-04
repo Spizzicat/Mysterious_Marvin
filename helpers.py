@@ -31,7 +31,7 @@ async def get_relevant_attachment_url(ctx : commands.Context, type : str, subtyp
     try:
         url = ctx.message.attachments[0].url
     except IndexError:
-        url = await self.get_nearby_attachment_url(ctx, type, subtype)
+        url = await get_nearby_attachment_url(ctx, type, subtype)
 
     if not url:
         raise Exception(f'Could not find a relevant attachment attached to the command or to a recent message.')

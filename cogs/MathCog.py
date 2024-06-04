@@ -12,11 +12,10 @@ from cycler import cycler
 from discord.ext import commands
 from scipy.special import gamma
 import sympy as sym
-
-from helpers import *
 from scipy.fft import fft, ifft, fftfreq
 
-from bot import DIR
+from helpers import *
+from constants import DIR
 
 LEGAL = {
             # constants

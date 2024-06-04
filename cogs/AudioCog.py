@@ -13,7 +13,7 @@ from scipy.io import wavfile
 from scipy.fft import fft, ifft, fftfreq
 from scipy import stats
 from helpers import get_relevant_attachment_url
-from bot import DIR
+from constants import DIR
 
 NOTE_NAMES = ['C','Db','D','Eb','E','F','Gb','G','A','Bb','B']
 

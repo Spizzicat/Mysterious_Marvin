@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from helpers import get_relevant_attachment_url
-from bot import DIR
+from constants import DIR
 
 class HistoryCog(commands.Cog):
 

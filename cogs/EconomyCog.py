@@ -6,7 +6,7 @@ from datetime import *
 from typing import Optional
 import os
 import asyncio
-from bot import DIR
+from constants import DIR
 
 # things to do:
 # make update_companies() handle the money in nonexistent companies before deletion
